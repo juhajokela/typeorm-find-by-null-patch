@@ -2,7 +2,7 @@
 
 Patching/fixing the peculiar feature of TypeORM that returns data from database when querying with `id = null`, although there are no records with `id = null`. This feature is potentially dangerous in the perspective of security, as directly passing id from url returns records if id is not provided. This had to be fixed!
 
-The beef is the getRepository function implementation in index.ts file. The rest of the file is just verifying the functioning of getRepository implementation (and producing the results below).
+The beef is in the `patch.ts` file. The rest is just verifying the functioning of the patch (and producing the results below).
 
 The patch is implemented by using public APIs of the TypeORM library to make it as proof as possible in future updates of the library by combining https://typeorm.io/custom-repository with https://typeorm.io/working-with-entity-manager
 

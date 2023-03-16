@@ -1,68 +1,22 @@
 import "reflect-metadata"
-import { IsNull, Not, In } from "typeorm"
+import { Not, In } from "typeorm"
 import { Account } from "./entity/Account"
 import { db } from "./database"
-
-// quick and dirty SHALLOW copy, for better (preferably deep copy?) check lodash or something else
-const copy = (obj) => ({ ...obj })
-
-const mapNull = (value) => value == null || value === undefined ? IsNull() : value
-const mapNullsInEntries = ([key, value]) => [key, mapNull(value)]
-const mapNullsInObject = (obj) => Object.fromEntries(Object.entries(obj).map(mapNullsInEntries))
-
-// https://typeorm.io/custom-repository
-// https://github.com/typeorm/typeorm/blob/0.3.12/src/repository/Repository.ts#L523
-// https://typeorm.io/working-with-entity-manager
-// https://github.com/typeorm/typeorm/blob/0.3.12/src/entity-manager/EntityManager.ts#L1071
-const getRepository = (entityClass) =>
-  db.getRepository(entityClass).extend({
-    async find(options) {
-      const opts = copy(options)
-      opts.where = mapNullsInObject(options.where)
-      return this.manager.find(entityClass, opts)
-    },
-    async findBy(where) {
-      return this.manager.findBy(entityClass, mapNullsInObject(where))
-    },
-    async findAndCount(options) {
-      const opts = copy(options)
-      opts.where = mapNullsInObject(options.where)
-      return this.manager.findAndCount(entityClass, opts)
-    },
-    async findAndCountBy(where) {
-      return this.manager.findAndCountBy(entityClass, mapNullsInObject(where))
-    },
-    /*
-    async findByIds(ids) {
-      return this.manager.findByIds(entityClass, ids.map(mapNull))
-    },
-    */
-    async findOne(options) {
-      const opts = copy(options)
-      opts.where = mapNullsInObject(options.where)
-      return this.manager.findOne(entityClass, opts)
-    },
-    async findOneBy(where) {
-      return this.manager.findAndCountBy(entityClass, mapNullsInObject(where))
-    },
-    async findOneById(id) {
-      return this.manager.findOneById(entityClass, mapNull(id))
-    },
-    async findOneOrFail(options) {
-      const opts = copy(options)
-      opts.where = mapNullsInObject(options.where)
-      return this.manager.findOneOrFail(entityClass, opts)
-    },
-    async findOneByOrFail(where) {
-      return this.manager.findOneByOrFail(entityClass, mapNullsInObject(where))
-    }
-  })
+import { patch } from "./patch"
 
 async function createAccount(repository, balance: number) {
   const account = new Account()
   account.balance = balance
   await repository.save(account)
   return account.id
+}
+
+const output = async (x) => {
+  try {
+    return JSON.stringify(await x)
+  } catch (e) {
+    return e.name
+  }
 }
 
 db.initialize()
@@ -72,14 +26,6 @@ db.initialize()
     const accountTwoId = await createAccount(accountRepository, 250)
 
     const ids = [null, undefined, accountOneId]
-
-    const output = async (x) => {
-      try {
-        return JSON.stringify(await x)
-      } catch (e) {
-        return e.name
-      }
-    }
 
     console.log('\n*** builtinRepository ***')
     for (let id of ids) {
@@ -98,7 +44,8 @@ db.initialize()
     console.log([null, undefined], 'findBy In', await accountRepository.findBy({id: In([null, undefined])}))
 
     console.log('\n*** customRepository ***')
-    const betterAccountRepository = getRepository(Account)
+    patch(db)
+    const betterAccountRepository = db.getRepository(Account)
     for (let id of ids) {
       console.log(id, 'find           ', await output(betterAccountRepository.find({where: {id: id}})))
       console.log(id, 'findBy         ', await output(betterAccountRepository.findBy({id: id})))
