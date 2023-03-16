@@ -1,0 +1,18 @@
+{
+  "name": "typeorm-find-by-null-patch",
+  "version": "0.1",
+  "description": "A patch for 'find by null'-issue of TypeORM.",
+  "devDependencies": {
+    "@types/node": "^18.15.3",
+    "ts-node": "10.9.1",
+    "typescript": "4.9.5"
+  },
+  "dependencies": {
+    "reflect-metadata": "^0.1.13",
+    "typeorm": "0.3.12",
+    "sqlite3": "^5.1.6"
+  },
+  "scripts": {
+    "start": "ts-node src/index.ts"
+  }
+}
