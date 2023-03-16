@@ -1,3 +1,4 @@
+import { strict as assert } from 'node:assert'
 import { IsNull } from "typeorm"
 
 // quick & dirty SHALLOW copy, for better (preferably deep copy?) check lodash or something else
@@ -57,6 +58,7 @@ const getRepositoryProxy = (db) =>
   })
 
 export function patch(db) {
+  assert.strictEqual(db._getRepository, undefined)
   db._getRepository = db.getRepository
   db.getRepository = getRepositoryProxy(db)
 }
