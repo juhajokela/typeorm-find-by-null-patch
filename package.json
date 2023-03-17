@@ -1,7 +1,7 @@
 {
   "name": "typeorm-find-by-null-patch",
   "version": "0.1",
-  "description": "A patch for 'find by null'-issue of TypeORM.",
+  "description": "A patch for 'find by null'-issue in TypeORM.",
   "devDependencies": {
     "@types/node": "^18.15.3",
     "ts-node": "10.9.1",

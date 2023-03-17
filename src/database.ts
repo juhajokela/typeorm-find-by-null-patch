@@ -7,5 +7,5 @@ export const db = new Database({
     dropSchema: true,
     synchronize: true,
     logging: false,
-    entities: ["src/entity/**/*.ts"],
+    entities: ["src/models/**/*.ts"],
 })
