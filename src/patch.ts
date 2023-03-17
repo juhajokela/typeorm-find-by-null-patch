@@ -75,8 +75,15 @@ const getRepositoryProxy = (db) =>
     }
   })
 
-export function patch(db) {
+export default function patch(db) {
   assert.strictEqual(db._getRepository, undefined)
   db._getRepository = db.getRepository
   db.getRepository = getRepositoryProxy(db)
+}
+
+// only for testing
+export const _private = {
+  isArray,
+  isObject,
+  mapValue,
 }

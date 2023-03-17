@@ -13,10 +13,6 @@ npm i
 npm start
 ```
 
-## Todo
-
-- test mapObject in patch.ts
-
 ## Results
 
 ```

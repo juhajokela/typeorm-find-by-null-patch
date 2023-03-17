@@ -2,7 +2,7 @@ import "reflect-metadata"
 import { Not, In } from "typeorm"
 import { Account, Transaction } from "./models/models"
 import { db } from "./database"
-import { patch } from "./patch"
+import patch from "./patch"
 
 async function createAccount(db): Promise<[number, string, string]> {
   const tx1 = new Transaction()
