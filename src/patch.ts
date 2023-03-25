@@ -58,7 +58,7 @@ const getRepositoryProxy = (db) =>
       return this.manager.findOne(entityClass, opts)
     },
     async findOneBy(where) {
-      return this.manager.findAndCountBy(entityClass, mapObject(where))
+      return this.manager.findOneBy(entityClass, mapObject(where))
     },
     /*
     async findOneById(id) {
